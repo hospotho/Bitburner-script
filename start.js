@@ -19,7 +19,7 @@ export async function main(ns) {
         if (resetTime == 0 || cHackLv - hackLv > 50) {
             ns.tprint('start.js starting new reset.js')
             hackLv = cHackLv
-            resetTime = 1000 * 60 * 30
+            resetTime = 1000 * 60 * 60
             ns.run('reset.js')
             while (ns.isRunning('reset.js', 'home')) {
                 await ns.asleep(500)
