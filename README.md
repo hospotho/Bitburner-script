@@ -5,8 +5,7 @@ To start hacking `run start.js`, other scripts will exec when they need to.
 
 ## Main scripts
 
-Peek needed ram = 21.1GB
-= 2.75(start.js) + 4.25(buyServer.js) + 5.30(reset.js) + 8.8(init.js)
+Peek needed ram = 2.75(start.js) + 4.25(buyServer.js) + 5.30(reset.js) + 8.8(init.js) = 21.1GB
 
 | Script       | Ram    | Dscription                                                                  |
 | ------------ | ------ | --------------------------------------------------------------------------- |
@@ -25,7 +24,7 @@ Peek needed ram = 21.1GB
 
 ## Tool Scripts
 
-Use them when needed to debug
+Use them when to debug
 
 | Script      | Ram    | Dscription                               |
 | ----------- | ------ | ---------------------------------------- |
