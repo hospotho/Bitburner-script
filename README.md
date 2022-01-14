@@ -1,9 +1,9 @@
-#Bitburner scripts
+## Bitburner scripts
 
 Hacking scripts and debug tools.
 To start hacking `run start.js`, other scripts will exec when they need to.
 
-##Main scripts
+## Main scripts
 
 Peek needed ram = 21.1GB
 = 2.75(start.js) + 4.25(buyServer.js) + 5.30(reset.js) + 8.8(init.js)
@@ -23,7 +23,7 @@ Peek needed ram = 21.1GB
 | h.js         | 1.7GB  | for hack server                                                             |
 | w.js         | 1.7GB  | for weaken server                                                           |
 
-##Tool Scripts
+## Tool Scripts
 
 Use them when needed to debug
 
