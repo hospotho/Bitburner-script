@@ -18,8 +18,8 @@ Peek needed ram = 2.75(start.js) + 4.25(buyServer.js) + 5.30(reset.js) + 8.8(ini
 | master.js    | 3.75GB | manage all hack using data in `best.txt`                                    |
 | buyServer.js | 4.25GB | buy server, change ram to lower the cost when mult is low                   |
 | formula.js   | 0GB    | functions for calc                                                          |
-| g.js         | 1.7GB  | for grow server                                                             |
 | h.js         | 1.7GB  | for hack server                                                             |
+| g.js         | 1.7GB  | for grow server                                                             |
 | w.js         | 1.7GB  | for weaken server                                                           |
 
 ## Tool Scripts
@@ -31,4 +31,4 @@ Use them when to debug
 | test.js     | 7.85GB | print useful data of a server            |
 | health.js   | 3.7GB  | print health of top server in `best.txt` |
 | checkRam.js | 1.7GB  | print ram info of home and servers       |
-| killall.js  | 3.1GB  | killall at all server                    |
+| killall.js  | 3.1GB  | run killall at all server                |
