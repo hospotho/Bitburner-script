@@ -1,12 +1,11 @@
-##Bitburner scripts
+## Bitburner scripts
 
 Hacking scripts and debug tools.
 To start hacking `run start.js`, other scripts will exec when they need to.
 
-##Main scripts
+## Main scripts
 
-Peek needed ram = 21.1GB
-= 2.75(start.js) + 4.25(buyServer.js) + 5.30(reset.js) + 8.8(init.js)
+Peek needed ram = 2.75(start.js) + 4.25(buyServer.js) + 5.30(reset.js) + 8.8(init.js) = 21.1GB
 
 | Script       | Ram    | Dscription                                                                  |
 | ------------ | ------ | --------------------------------------------------------------------------- |
@@ -19,17 +18,17 @@ Peek needed ram = 21.1GB
 | master.js    | 3.75GB | manage all hack using data in `best.txt`                                    |
 | buyServer.js | 4.25GB | buy server, change ram to lower the cost when mult is low                   |
 | formula.js   | 0GB    | functions for calc                                                          |
-| g.js         | 1.7GB  | for grow server                                                             |
 | h.js         | 1.7GB  | for hack server                                                             |
+| g.js         | 1.7GB  | for grow server                                                             |
 | w.js         | 1.7GB  | for weaken server                                                           |
 
-##Tool Scripts
+## Tool Scripts
 
-Use them when needed to debug
+Use them when to debug
 
 | Script      | Ram    | Dscription                               |
 | ----------- | ------ | ---------------------------------------- |
 | test.js     | 7.85GB | print useful data of a server            |
 | health.js   | 3.7GB  | print health of top server in `best.txt` |
 | checkRam.js | 1.7GB  | print ram info of home and servers       |
-| killall.js  | 3.1GB  | killall at all server                    |
+| killall.js  | 3.1GB  | run killall at all server                |
