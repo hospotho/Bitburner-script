@@ -23,9 +23,6 @@ export async function main(ns) {
 		await ns.scp('h.js', 'home', server)
 		await ns.scp('g.js', 'home', server)
 		await ns.scp('w.js', 'home', server)
-		ns.scriptKill('h.js', server)
-		ns.scriptKill('g.js', server)
-		ns.scriptKill('w.js', server)
 	}
 	await ns.asleep(500)
 
