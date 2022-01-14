@@ -1,4 +1,4 @@
-##Bitburner scripts
+#Bitburner scripts
 
 Hacking scripts and debug tools.
 To start hacking `run start.js`, other scripts will exec when they need to.
