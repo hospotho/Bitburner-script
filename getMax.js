@@ -201,7 +201,7 @@ export async function main(ns) {
     }
 
     //0-4   CorePerTS   5-9   CorePer1k   10-14 CorePer97
-    //15-19 PerTS       20-24 Per1k       24-29 Per97       30 error
+    //15-19 PerTS       20-24 Per1k       25-29 Per97       30 error
     var data = []
     data.push(bestHT_CorePerTS, neededGT_CorePerTS, neededWT_CorePerTS, income_CorePerTS, incomePerTS_CorePerTS)
     data.push(bestHT_CorePer1k, neededGT_CorePer1k, neededWT_CorePer1k, income_CorePer1k, incomePerTS_CorePer1k)

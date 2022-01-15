@@ -212,9 +212,9 @@ export async function main(ns) {
                 serverNeededGT[serverIndex] = Math.min(parseInt(data[11]) - coreNeededGT[coreIndex], serverNeededGT[serverIndex] + tempServerNeededGT[i])
                 serverNeededWT[serverIndex] = Math.min(parseInt(data[12]) - coreNeededWT[coreIndex], serverNeededWT[serverIndex] + tempServerNeededWT[i])
             } else if (coreIndex == -1 && serverIndex != -1) {
-                serverNeededHT[serverIndex] = Math.min(parseInt(data[10]), serverNeededHT[serverIndex] + tempServerNeededHT[i])
-                serverNeededGT[serverIndex] = Math.min(parseInt(data[11]), serverNeededGT[serverIndex] + tempServerNeededGT[i])
-                serverNeededWT[serverIndex] = Math.min(parseInt(data[12]), serverNeededWT[serverIndex] + tempServerNeededWT[i])
+                serverNeededHT[serverIndex] = Math.min(parseInt(data[25]), serverNeededHT[serverIndex] + tempServerNeededHT[i])
+                serverNeededGT[serverIndex] = Math.min(parseInt(data[26]), serverNeededGT[serverIndex] + tempServerNeededGT[i])
+                serverNeededWT[serverIndex] = Math.min(parseInt(data[27]), serverNeededWT[serverIndex] + tempServerNeededWT[i])
             }
             if (maxIndex < tempServerTarget.length) {
                 maxIndex++
