@@ -31,11 +31,11 @@ export async function main(ns) {
                     return
                 }
                 ns.tprintf(`Target:           ${fill(target, 20)}${type}`)
-                ns.tprintf(`Remained Ram:     ${fill(availableRam.toFixed(2) + 'GB')}Cast down needed T to remained ram`)
+                ns.tprintf(`Remained Ram:     ${fill(availableRam.toFixed(2) + 'GB', 15)}Cast down needed T to remained ram`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             } else {
                 ns.tprintf(`Target:           ${fill(target, 20)}${type}`)
-                ns.tprintf(`Remained Ram:     ${fill(availableRam.toFixed(2) + 'GB')}Needed Ram:       ${totalNeededRam.toFixed(2) + 'GB'}`)
+                ns.tprintf(`Remained Ram:     ${fill(availableRam.toFixed(2) + 'GB', 15)}Needed Ram:       ${totalNeededRam.toFixed(2) + 'GB'}`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             }
             ns.tprintf('\n')
@@ -63,11 +63,11 @@ export async function main(ns) {
                     return
                 }
                 ns.tprintf(`Target:         ${fill(target, 20)}${type}`)
-                ns.tprintf(`remained T:     ${fill(availableT + 'T')}Cast down needed T to remained T`)
+                ns.tprintf(`remained T:     ${fill(availableT + 'T', 15)}Cast down needed T to remained T`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             } else {
                 ns.tprintf(`Target:         ${fill(target, 20)}${type}`)
-                ns.tprintf(`remained T:     ${fill(availableT + 'T')}needed T:       ${totalNeededT}T`)
+                ns.tprintf(`remained T:     ${fill(availableT + 'T', 15)}needed T:       ${totalNeededT}T`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             }
             ns.tprintf('\n')
@@ -131,7 +131,7 @@ export async function main(ns) {
     var coreNeededHT = []
     var coreNeededGT = []
     var coreNeededWT = []
-    var maxIndex = -1
+    var maxIndex = 0
 
     function calcUsedCoreRam() {
         var usedRam = 0
@@ -192,22 +192,33 @@ export async function main(ns) {
         }
         return usedT
     }
-    for (let i = maxIndex; i < tempServerTarget.length; i++) {
+    for (let i = maxIndex - 1; i < tempServerTarget.length; i++) {
         if (serversT - calcUsedServerT() > 0) {
+            var coreIndex = coreTarget.indexOf(tempServerTarget[i])
             var serverIndex = serverTarget.indexOf(tempServerTarget[i])
-            if (serverIndex == -1) {
+            var data = ns.read(coreTarget[coreIndex] + '.txt').slice(0, -1).split(',')
+            if (coreIndex == -1 && serverIndex == -1) {
                 serverTarget.push(tempServerTarget[i])
                 serverNeededHT.push(tempServerNeededHT[i])
                 serverNeededGT.push(tempServerNeededGT[i])
                 serverNeededWT.push(tempServerNeededWT[i])
-            } else {
-                var coreIndex = coreTarget.indexOf(tempServerTarget[i])
-                var data = ns.read(coreTarget[coreIndex] + '.txt').slice(0, -1).split(',')
+            } else if (coreIndex != -1 && serverIndex == -1) {
+                serverTarget.push(tempServerTarget[i])
+                serverNeededHT.push(Math.min(parseInt(data[10]) - coreNeededHT[coreIndex], tempServerNeededHT[i]))
+                serverNeededGT.push(Math.min(parseInt(data[11]) - coreNeededGT[coreIndex], tempServerNeededGT[i]))
+                serverNeededWT.push(Math.min(parseInt(data[12]) - coreNeededWT[coreIndex], tempServerNeededWT[i]))
+            } else if (coreIndex != -1 && serverIndex != -1) {
                 serverNeededHT[serverIndex] = Math.min(parseInt(data[10]) - coreNeededHT[coreIndex], serverNeededHT[serverIndex] + tempServerNeededHT[i])
                 serverNeededGT[serverIndex] = Math.min(parseInt(data[11]) - coreNeededGT[coreIndex], serverNeededGT[serverIndex] + tempServerNeededGT[i])
                 serverNeededWT[serverIndex] = Math.min(parseInt(data[12]) - coreNeededWT[coreIndex], serverNeededWT[serverIndex] + tempServerNeededWT[i])
+            } else if (coreIndex == -1 && serverIndex != -1) {
+                serverNeededHT[serverIndex] = Math.min(parseInt(data[10]), serverNeededHT[serverIndex] + tempServerNeededHT[i])
+                serverNeededGT[serverIndex] = Math.min(parseInt(data[11]), serverNeededGT[serverIndex] + tempServerNeededGT[i])
+                serverNeededWT[serverIndex] = Math.min(parseInt(data[12]), serverNeededWT[serverIndex] + tempServerNeededWT[i])
             }
-            maxIndex++
+            if (maxIndex < tempServerTarget.length) {
+                maxIndex++
+            }
         }
     }
     ns.tprint(`ServerMaxIndex:   ${maxIndex}`)
