@@ -81,7 +81,7 @@ export async function main(ns) {
 		}
 
 		/*------------------------------------------------------------------------------------------------*/
-		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, s.moneyMax / Math.max(s.moneyAvailable, 1), core))
+		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1), core))
 		var needCoreW = () => Math.ceil((needCoreG() * 0.004) / (ns.weakenAnalyze(1, core)))
 		var coreGWRatio = 1 + ns.weakenAnalyze(1, core) / 0.004
 		if (needCoreG() + needCoreW()) {
@@ -211,21 +211,40 @@ export async function main(ns) {
 	var serverNeededHT = []
 	var serverNeededGT = []
 	var serverNeededWT = []
-	for (let i = maxIndex; i < tempServerTarget.length; i++) {
-		if (serversT > 0) {
-			serversT = serversT - tempServerNeededHT[i] - tempServerNeededGT[i] - tempServerNeededWT[i]
+
+	function calcUsedServerT() {
+		var usedT = 0
+		for (let i = 0; i < serverTarget.length; i++) {
+			usedT += serverNeededHT[i] + serverNeededGT[i] + serverNeededWT[i]
+		}
+		return usedT
+	}
+	for (let i = maxIndex - 1; i < tempServerTarget.length; i++) {
+		if (serversT - calcUsedServerT() > 0) {
+			var coreIndex = coreTarget.indexOf(tempServerTarget[i])
 			var serverIndex = serverTarget.indexOf(tempServerTarget[i])
-			if (serverIndex == -1) {
+			var data = ns.read(coreTarget[coreIndex] + '.txt').slice(0, -1).split(',')
+			if (coreIndex == -1 && serverIndex == -1) {
 				serverTarget.push(tempServerTarget[i])
 				serverNeededHT.push(tempServerNeededHT[i])
 				serverNeededGT.push(tempServerNeededGT[i])
 				serverNeededWT.push(tempServerNeededWT[i])
-			} else {
-				var coreIndex = coreTarget.indexOf(tempServerTarget[i])
-				var data = ns.read(coreTarget[coreIndex] + '.txt').slice(0, -1).split(',')
+			} else if (coreIndex != -1 && serverIndex == -1) {
+				serverTarget.push(tempServerTarget[i])
+				serverNeededHT.push(Math.min(parseInt(data[10]) - coreNeededHT[coreIndex], tempServerNeededHT[i]))
+				serverNeededGT.push(Math.min(parseInt(data[11]) - coreNeededGT[coreIndex], tempServerNeededGT[i]))
+				serverNeededWT.push(Math.min(parseInt(data[12]) - coreNeededWT[coreIndex], tempServerNeededWT[i]))
+			} else if (coreIndex != -1 && serverIndex != -1) {
 				serverNeededHT[serverIndex] = Math.min(parseInt(data[10]) - coreNeededHT[coreIndex], serverNeededHT[serverIndex] + tempServerNeededHT[i])
 				serverNeededGT[serverIndex] = Math.min(parseInt(data[11]) - coreNeededGT[coreIndex], serverNeededGT[serverIndex] + tempServerNeededGT[i])
 				serverNeededWT[serverIndex] = Math.min(parseInt(data[12]) - coreNeededWT[coreIndex], serverNeededWT[serverIndex] + tempServerNeededWT[i])
+			} else if (coreIndex == -1 && serverIndex != -1) {
+				serverNeededHT[serverIndex] = Math.min(parseInt(data[25]), serverNeededHT[serverIndex] + tempServerNeededHT[i])
+				serverNeededGT[serverIndex] = Math.min(parseInt(data[26]), serverNeededGT[serverIndex] + tempServerNeededGT[i])
+				serverNeededWT[serverIndex] = Math.min(parseInt(data[27]), serverNeededWT[serverIndex] + tempServerNeededWT[i])
+			}
+			if (maxIndex < tempServerTarget.length) {
+				maxIndex++
 			}
 		}
 	}
