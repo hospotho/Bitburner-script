@@ -98,7 +98,7 @@ export async function main(ns) {
 			if (homeWT > 0) {
 				ns.exec('w.js', 'home', homeWT, _target, 'grow')
 			}
-			var needServerG = Math.ceil(ns.growthAnalyze(_target, ns.s.moneyMax / Math.max((s.moneyAvailable, 1) * growPercent(player, s, Math.min(homeGT, needCoreG()), core))) * 1.05)
+			var needServerG = Math.ceil(ns.growthAnalyze(_target, s.moneyMax / Math.max((s.moneyAvailable, 1) * growPercent(player, s, Math.min(homeGT, needCoreG()), core))) * 1.05)
 			var serverGT = needServerG > Math.floor(getServerT() / 27 * 25) ? Math.floor(getServerT() / 27 * 25) : needServerG
 			var serverWT = needServerG > Math.floor(getServerT() / 27 * 25) ? Math.ceil(getServerT() / 27 * 2) : needServerT
 			for (const server of rooted) {
