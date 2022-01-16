@@ -48,5 +48,5 @@ export async function main(ns) {
         attack(server);
     }
 
-    ns.write('rooted.txt', rooted, 'w');
+    await ns.write('rooted.txt', rooted, 'w');
 }

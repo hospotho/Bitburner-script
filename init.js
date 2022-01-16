@@ -5,7 +5,8 @@ import {
 export async function main(ns) {
 	const rooted = ns.read('rooted.txt').split(',')
 	const player = ns.getPlayer()
-	const core = ns.getServer('home').cpuCores
+	const h = ns.getServer('home')
+	const core = h.cpuCores
 	const gwRam = 1.75
 
 	var getHomeT = () => Math.floor((ns.getServer('home').maxRam - ns.getServer('home').ramUsed - 20) / gwRam)
@@ -19,10 +20,11 @@ export async function main(ns) {
 	}
 
 	async function toMax(_target) {
+		var s = ns.getServer(_target)
 		const perCoreW = ns.weakenAnalyze(1, core)
 		const perServerW = ns.weakenAnalyze(1)
 
-		const diff = ns.getServerSecurityLevel(_target) - ns.getServerMinSecurityLevel(_target)
+		const diff = s.hackDifficulty - s.minDifficulty
 		const coreMaxW = perCoreW * getHomeT()
 		const serverMaxW = perServerW * getServerT()
 		const maxW = coreMaxW + serverMaxW
@@ -40,7 +42,8 @@ export async function main(ns) {
 		while (initWCount--) {
 			ns.exec('w.js', 'home', maxHomeT, _target, 'weak')
 			for (const server of rooted) {
-				var maxT = Math.floor((ns.getServer(server).maxRam - ns.getServer(server).ramUsed) / gwRam)
+				let s = ns.getServer(server)
+				let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
 				if (maxT) {
 					ns.exec('w.js', server, maxT, _target, 'weak')
 				}
@@ -59,7 +62,8 @@ export async function main(ns) {
 			let neededT = Math.ceil((remainDiff - coreMaxW) / perCoreW)
 			for (const server of rooted) {
 				if (neededT > 0) {
-					let maxT = Math.floor((ns.getServer(server).maxRam - ns.getServer(server).ramUsed) / gwRam)
+					let s = ns.getServer(server)
+					let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
 					if (maxT) {
 						ns.exec('w.js', server, Math.min(maxT, neededT), _target, 'weak')
 						neededT -= maxT
@@ -68,7 +72,7 @@ export async function main(ns) {
 			}
 		}
 		if (initWCoreExtra_flag || initWServerExtra_flag) {
-			if (ns.getServerSecurityLevel(_target) - ns.getServerMinSecurityLevel(_target) > 2) {
+			if (s.hackDifficulty - s.minDifficulty > 2) {
 				await ns.asleep(ns.getWeakenTime(_target) + 1000)
 			} else {
 				await ns.asleep(1000)
@@ -76,7 +80,7 @@ export async function main(ns) {
 		}
 
 		/*------------------------------------------------------------------------------------------------*/
-		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1), core))
+		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, s.moneyMax / Math.max(s.moneyAvailable, 1), core))
 		var needCoreW = () => Math.ceil((needCoreG() * 0.004) / (ns.weakenAnalyze(1, core)))
 		var coreGWRatio = 1 + ns.weakenAnalyze(1, core) / 0.004
 		if (needCoreG() + needCoreW()) {
@@ -94,12 +98,13 @@ export async function main(ns) {
 			if (homeWT) {
 				ns.exec('w.js', 'home', homeWT, _target, 'grow')
 			}
-			var needServerG = Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max((ns.getServer(_target).moneyAvailable, 1) * growPercent(player, ns.getServer(_target), Math.min(homeGT, needCoreG()), core))) * 1.05)
+			var needServerG = Math.ceil(ns.growthAnalyze(_target, ns.s.moneyMax / Math.max((s.moneyAvailable, 1) * growPercent(player, s, Math.min(homeGT, needCoreG()), core))) * 1.05)
 			var serverGT = needServerG > Math.floor(getServerT() / 27 * 25) ? Math.floor(getServerT() / 27 * 25) : needServerG
 			var serverWT = needServerG > Math.floor(getServerT() / 27 * 25) ? Math.ceil(getServerT() / 27 * 2) : needServerT
 			for (const server of rooted) {
 				if ((serverGT + serverWT) > 0) {
-					let maxT = Math.floor((ns.getServer(server).maxRam - ns.getServer(server).ramUsed) / gwRam)
+					let s = ns.getServer(server)
+					let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
 					if (serverGT && maxT) {
 						if (serverGT >= maxT) {
 							ns.exec('g.js', server, maxT, _target, 'grow')
@@ -172,7 +177,7 @@ export async function main(ns) {
 		}
 	}
 
-	var homeRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home') - 20
+	var homeRam = h.maxRam - h.ramUsed - 20
 	var coreTarget = []
 	var coreNeededHT = []
 	var coreNeededGT = []
@@ -199,7 +204,7 @@ export async function main(ns) {
 	}
 	var serversT = 0
 	for (const server of rooted) {
-		serversT += Math.floor((ns.getServerMaxRam(server) - ns.getServerUsedRam(server)) / 1.75)
+		serversT += Math.floor((ns.getServer(server).maxRam - ns.getServer(server).ramUsed) / 1.75)
 	}
 	var serverTarget = []
 	var serverNeededHT = []

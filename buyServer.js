@@ -1,13 +1,13 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    var ram = 512;
-    var i = 0;
+    var ram = 16
+    var i = 0
 
     while (i < ns.getPurchasedServerLimit()) {
-        if (ns.getServerMoneyAvailable("home") > ns.getPurchasedServerCost(ram)) {
-            ns.purchaseServer("pserv-" + i, ram);
-            i++;
+        var name = ns.purchaseServer("pserv-" + i, ram)
+        if (name != '') {
+            i++
         }
-        await ns.asleep(500)
+        await ns.asleep(1000)
     }
 }

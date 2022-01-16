@@ -7,23 +7,22 @@ export async function main(ns) {
     var target = ns.args[0]
     var mode = ns.args[1] ? ns.args[1] : 'view'
     await ns.write(target + '.txt', '', 'w')
-    ns.rm(target + '.txt', 'home')
+    var s = ns.getServer(target)
+    var p = ns.getPlayer()
+    var error = 0;
+    var minSecLv = s.minDifficulty
+    var secLv = s.hackDifficulty
+    var reqHLv = s.requiredHackingSkill
 
-    if (ns.getHackingLevel() / 1.5 < ns.getServerRequiredHackingLevel(target)) {
+    if (Math.floor(p.hacking / 1.5) + 10 < s.requiredHackingSkill) {
         if (mode === 'view') {
             ns.tprintf('\n')
-            ns.tprintf(`WARNING HackLv:   ${ns.getHackingLevel()}   Require:   ${ns.getServerRequiredHackingLevel(target)}`)
+            ns.tprintf(`WARNING HackLv:   ${p.hacking}   Require:   ${s.requiredHackingSkill}`)
             ns.tprintf(`WARNING HackLv too low`)
         }
         return
     }
 
-    var s = ns.getServer(target)
-    var p = ns.getPlayer()
-    var error = 0;
-    var minSecLv = ns.getServerMinSecurityLevel(target)
-    var secLv = s.hackDifficulty
-    var reqHLv = s.requiredHackingSkill
     if (secLv > minSecLv) {
         error = secLv - minSecLv
         if (mode === 'view') {

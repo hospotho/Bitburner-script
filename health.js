@@ -19,7 +19,7 @@ export async function main(ns) {
             var moneyM = s.moneyMax
             var moneyPer = moneyN / moneyM * 100
             var secLv = s.hackDifficulty
-            var secNLv = ns.getServerMinSecurityLevel(target)
+            var secNLv = s.minDifficulty
 
             ns.tprintf(`${fill((i + 1) + '.', 5)}    ${fill(target, 20)}Money%%:   ${fill(moneyPer.toFixed(5) + '%%', 15)}diff:   ${fill((secLv - secNLv).toFixed(5))}`);
         }

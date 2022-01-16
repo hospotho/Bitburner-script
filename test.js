@@ -1,8 +1,11 @@
 /** @param {NS} ns **/
 export async function main(ns) {
 	var target = ns.args[0]
-	try { ns.getServer(target) }
-	catch (e) { return ns.tprint('No such server') }
+	try {
+		ns.getServer(target)
+	} catch (e) {
+		return ns.tprint('No such server')
+	}
 
 	var s = ns.getServer(target)
 	var core = ns.getServer('home').cpuCores
@@ -17,7 +20,7 @@ export async function main(ns) {
 	var gr = s.serverGrowth
 
 	var secLv = s.hackDifficulty
-	var secNLv = ns.getServerMinSecurityLevel(target)
+	var secNLv = s.minDifficulty
 	var reqHLv = s.requiredHackingSkill
 
 	var hChance = ns.hackAnalyzeChance(target) * 100
