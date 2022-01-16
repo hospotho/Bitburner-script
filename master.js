@@ -20,14 +20,14 @@ export async function main(ns) {
         var neededWT = _neededWT
         if (type === 'Core') {
             var totalNeededRam = neededHT * 1.7 + neededGT * 1.75 + neededWT * 1.75
-            var availableRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home') - 20
+            var availableRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home') - 10
             if (totalNeededRam > availableRam) {
                 var mult = availableRam / availableRam
                 neededHT = Math.floor(neededHT * mult)
                 neededGT = Math.floor(neededGT * mult)
                 neededWT = Math.ceil(neededWT * mult)
                 totalNeededRam = neededHT * 1.7 + neededGT * 1.75 + neededWT * 1.75
-                if (totalNeededRam - 5 > availableRam || neededHT == 0 || neededGT == 0 || neededWT == 0) {
+                if (neededHT == 0 || neededGT == 0 || neededWT == 0) {
                     return
                 }
                 ns.tprintf(`Target:           ${fill(target, 20)}${type}`)
@@ -123,7 +123,7 @@ export async function main(ns) {
         }
     }
 
-    var homeRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home') - 20
+    var homeRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home') - 10
     if (ns.args[0] === 'test') {
         homeRam = ns.getServerMaxRam('home') - 30
     }

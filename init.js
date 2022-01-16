@@ -9,7 +9,7 @@ export async function main(ns) {
 	const core = h.cpuCores
 	const gwRam = 1.75
 
-	var getHomeT = () => Math.floor((ns.getServer('home').maxRam - ns.getServer('home').ramUsed - 20) / gwRam)
+	var getHomeT = () => Math.floor((ns.getServer('home').maxRam - ns.getServer('home').ramUsed - 10) / gwRam)
 
 	var getServerT = () => {
 		var maxServerT = 0
@@ -92,10 +92,10 @@ export async function main(ns) {
 			var sleepTime = ns.getHackTime(_target)
 			var homeGT = Math.floor(Math.min(getHomeT(), needCoreG()) / coreGWRatio * (coreGWRatio - 1))
 			var homeWT = Math.max(Math.ceil(Math.min(getHomeT() / coreGWRatio, needCoreW())), Math.min(getHomeT() - homeGT, needCoreW()))
-			if (homeGT) {
+			if (homeGT > 0) {
 				ns.exec('g.js', 'home', homeGT, _target, sleepTime * 0.75, 'grow')
 			}
-			if (homeWT) {
+			if (homeWT > 0) {
 				ns.exec('w.js', 'home', homeWT, _target, 'grow')
 			}
 			var needServerG = Math.ceil(ns.growthAnalyze(_target, ns.s.moneyMax / Math.max((s.moneyAvailable, 1) * growPercent(player, s, Math.min(homeGT, needCoreG()), core))) * 1.05)

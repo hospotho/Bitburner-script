@@ -14,8 +14,8 @@ Peek needed ram = 2.75(start.js) + 3.9(buyServer.js) + 5.2(reset.js) + 8.5(init.
 | worm.js      | 2.35GB | scan and nuke all server and output rooted server list to `rooted.txt`      |
 | getMax.js    | 7.15GB | ouput hack data of  a server to `{server}.txt`                              |
 | best.js      | 1.7GB  | ouput best hack list to `best.txt` using all `{server}.txt`                 |
-| init.js      | 8.5GB  | init needed server using data in `best.txt`                                 |
-| master.js    | 3.75GB | manage all hack using data in `best.txt`                                    |
+| init.js      | 8.5GB  | init needed server using data in `best.txt`, 10GB ram preserved for user    |
+| master.js    | 3.75GB | manage all hack using data in `best.txt`, 10GB ram preserved for user       |
 | buyServer.js | 3.9GB  | buy server, change ram to lower the cost when mult is low                   |
 | formula.js   | 0GB    | functions for calc                                                          |
 | h.js         | 1.7GB  | for hack server                                                             |
