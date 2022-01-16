@@ -7,7 +7,7 @@ export async function main(ns) {
     while (ns.isRunning('reset.js', 'home')) {
         await ns.asleep(500)
     }
-    await ns.asleep(1000 * 60 * 5)
+    await ns.asleep(1000 * 60 * 10)
     ns.run('buyServer.js')
     var hackLv = ns.getHackingLevel()
     var resetTime = 1000 * 60 * 60
@@ -26,6 +26,7 @@ export async function main(ns) {
                 while (ns.isRunning('reset.js', 'home')) {
                     await ns.asleep(500)
                 }
+                await ns.asleep(1000 * 60 * 10)
             }
             resetTime -= 1000
         } else {

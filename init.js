@@ -13,7 +13,8 @@ export async function main(ns) {
 
 	var getServerT = () => {
 		var maxServerT = 0
-		for (const server of rooted) {
+		var servers = ns.read('rooted.txt').split(',')
+		for (const server of servers) {
 			maxServerT += Math.floor((ns.getServer(server).maxRam - ns.getServer(server).ramUsed) / gwRam)
 		}
 		return maxServerT
