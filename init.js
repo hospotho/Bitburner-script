@@ -40,7 +40,7 @@ export async function main(ns) {
 		}
 
 		while (initWCount--) {
-			ns.exec('w.js', 'home', maxHomeT, _target, 'weak')
+			ns.exec('w.js', 'home', getHomeT(), _target, 'weak')
 			for (const server of rooted) {
 				let s = ns.getServer(server)
 				let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)

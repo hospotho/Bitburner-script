@@ -6,8 +6,8 @@ To start hacking `run start.js`, other scripts will exec when they need to.
 ## Main scripts
 
 Peek needed ram for start.js
-= 2.75(start.js) + 3.9(buyServer.js) + 5.2(reset.js) + 8.5(init.js)
-= 20.35GB
+= 2.75(start.js) + 5.2(reset.js) + 8.5(init.js)
+= 16.45GB
 
 Minimum needed ram when master.js is up
 = 2.75(start.js) + 3.75(master.js)
