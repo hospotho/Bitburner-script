@@ -5,7 +5,15 @@ To start hacking `run start.js`, other scripts will exec when they need to.
 
 ## Main scripts
 
-Peek needed ram = 2.75(start.js) + 3.9(buyServer.js) + 5.2(reset.js) + 8.5(init.js) = 20.35GB
+Peek needed ram for start.js
+= 2.75(start.js) + 3.9(buyServer.js) + 5.2(reset.js) + 8.5(init.js)
+= 20.35GB
+
+Minimum needed ram when master.js is up
+= 2.75(start.js) + 3.75(master.js)
+= 6.5GB
+
+better run killall.js before start when some other script is running
 
 | Script       | Ram    | Dscription                                                                  |
 | ------------ | ------ | --------------------------------------------------------------------------- |
@@ -16,7 +24,7 @@ Peek needed ram = 2.75(start.js) + 3.9(buyServer.js) + 5.2(reset.js) + 8.5(init.
 | best.js      | 1.7GB  | ouput best hack list to `best.txt` using all `{server}.txt`                 |
 | init.js      | 8.5GB  | init needed server using data in `best.txt`, 10GB ram preserved for user    |
 | master.js    | 3.75GB | manage all hack using data in `best.txt`, 10GB ram preserved for user       |
-| buyServer.js | 3.9GB  | buy server, change ram to lower the cost when mult is low                   |
+| buyServer.js | 3.9GB  | buy server, lower ram value in script when mult is low                      |
 | formula.js   | 0GB    | functions for calc                                                          |
 | h.js         | 1.7GB  | for hack server                                                             |
 | g.js         | 1.7GB  | for grow server                                                             |
@@ -24,7 +32,7 @@ Peek needed ram = 2.75(start.js) + 3.9(buyServer.js) + 5.2(reset.js) + 8.5(init.
 
 ## Tool Scripts
 
-Use them when to debug
+Use them when debugging
 
 | Script      | Ram    | Dscription                               |
 | ----------- | ------ | ---------------------------------------- |
