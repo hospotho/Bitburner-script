@@ -31,7 +31,7 @@ export async function main(ns) {
                     return
                 }
                 ns.tprintf(`Target:           ${fill(target, 20)}${type}`)
-                ns.tprintf(`Remained Ram:     ${fill(availableRam.toFixed(2) + 'GB', 15)}Cast down needed T to remained ram`)
+                ns.tprintf(`Remained Ram:     ${fill(availableRam.toFixed(2) + 'GB', 15)}Cast down needed ram to remained ram`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             } else {
                 ns.tprintf(`Target:           ${fill(target, 20)}${type}`)
@@ -63,11 +63,11 @@ export async function main(ns) {
                     return
                 }
                 ns.tprintf(`Target:         ${fill(target, 20)}${type}`)
-                ns.tprintf(`remained T:     ${fill(availableT + 'T', 15)}Cast down needed T to remained T`)
+                ns.tprintf(`Remained T:     ${fill(availableT + 'T', 15)}Cast down needed T to remained T`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             } else {
                 ns.tprintf(`Target:         ${fill(target, 20)}${type}`)
-                ns.tprintf(`remained T:     ${fill(availableT + 'T', 15)}needed T:       ${totalNeededT}T`)
+                ns.tprintf(`Remained T:     ${fill(availableT + 'T', 15)}needed T:       ${totalNeededT}T`)
                 ns.tprintf(`HT:   ${neededHT}   GT:   ${neededGT}   WT:   ${neededWT}`)
             }
             ns.tprintf('\n')
