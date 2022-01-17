@@ -94,7 +94,7 @@ export async function main(ns) {
 			var homeGT = Math.floor(Math.min(getHomeT(), needCoreG()) / coreGWRatio * (coreGWRatio - 1))
 			var homeWT = Math.max(Math.ceil(Math.min(getHomeT() / coreGWRatio, needCoreW())), Math.min(getHomeT() - homeGT, needCoreW()))
 			if (homeGT > 0) {
-				ns.exec('g.js', 'home', homeGT, _target, sleepTime * 0.75, 'grow')
+				ns.exec('g.js', 'home', homeGT, _target, sleepTime * 0.79, 'grow')
 			}
 			if (homeWT > 0) {
 				ns.exec('w.js', 'home', homeWT, _target, 'grow')
@@ -108,11 +108,11 @@ export async function main(ns) {
 					let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
 					if (serverGT && maxT) {
 						if (serverGT >= maxT) {
-							ns.exec('g.js', server, maxT, _target, 'grow')
+							ns.exec('g.js', server, maxT, _target, sleepTime * 0.79, 'grow')
 							serverGT -= maxT
 							maxT = 0
 						} else {
-							ns.exec('g.js', server, serverGT, _target, 'grow')
+							ns.exec('g.js', server, serverGT, _target, sleepTime * 0.79, 'grow')
 							serverGT = 0
 							maxT -= serverGT
 						}
@@ -134,7 +134,7 @@ export async function main(ns) {
 		}
 		if (needCoreG() + needCoreW()) {
 			var sleepTime = ns.getHackTime(_target)
-			ns.exec('g.js', 'home', needCoreG(), _target, sleepTime * 0.75, 'grow')
+			ns.exec('g.js', 'home', needCoreG(), _target, sleepTime * 0.79, 'grow')
 			ns.exec('w.js', 'home', needCoreW(), _target, 'grow')
 			await ns.asleep(sleepTime * 4 + 1000)
 		}

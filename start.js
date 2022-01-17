@@ -10,7 +10,7 @@ export async function main(ns) {
     await ns.asleep(1000 * 60 * 10)
     ns.run('buyServer.js')
     var hackLv = ns.getHackingLevel()
-    var resetTime = 1000 * 60 * 60
+    var resetTime = 1000 * 60 * 30
     while (true) {
         if (hackLv < 3000) {
             var cHackLv = ns.getHackingLevel()
@@ -21,7 +21,7 @@ export async function main(ns) {
             if (resetTime == 0 || cHackLv - hackLv > 50) {
                 ns.tprint('start.js starting new reset.js')
                 hackLv = cHackLv
-                resetTime = 1000 * 60 * 120
+                resetTime = 1000 * 60 * 60
                 ns.run('reset.js')
                 while (ns.isRunning('reset.js', 'home')) {
                     await ns.asleep(500)

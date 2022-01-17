@@ -42,7 +42,7 @@ export async function main(ns) {
             while (true) {
                 var sleepTime = ns.getHackTime(target)
                 ns.exec('h.js', 'home', neededHT, target, type)
-                ns.exec('g.js', 'home', neededGT, target, sleepTime * 0.75, type)
+                ns.exec('g.js', 'home', neededGT, target, sleepTime * 0.79, type)
                 ns.exec('w.js', 'home', neededWT, target, type)
                 await ns.asleep(sleepTime * 4 + 1000)
             }
@@ -85,7 +85,7 @@ export async function main(ns) {
                     }
                     serverT = Math.floor((ns.getServerMaxRam(server) - ns.getServerUsedRam(server)) / 1.75)
                     if (tempNeededGT > 0 && serverT > 0) {
-                        ns.exec('g.js', server, Math.min(tempNeededGT, serverT), target, sleepTime * 0.75, type)
+                        ns.exec('g.js', server, Math.min(tempNeededGT, serverT), target, sleepTime * 0.79, type)
                         tempNeededGT -= Math.min(tempNeededGT, serverT)
                     }
                     serverT = Math.floor((ns.getServerMaxRam(server) - ns.getServerUsedRam(server)) / 1.75)
