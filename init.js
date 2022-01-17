@@ -20,127 +20,118 @@ export async function main(ns) {
 		return maxServerT
 	}
 
-	async function toMax(_target) {
+	async function weakServer(_target) {
 		var s = ns.getServer(_target)
+		var diff = s.hackDifficulty - s.minDifficulty
+		var pass_flag = s.hackDifficulty / s.minDifficulty
 		const perCoreW = ns.weakenAnalyze(1, core)
 		const perServerW = ns.weakenAnalyze(1)
 
-		const diff = s.hackDifficulty - s.minDifficulty
-		const coreMaxW = perCoreW * getHomeT()
-		const serverMaxW = perServerW * getServerT()
-		const maxW = coreMaxW + serverMaxW
-		const remainDiff = diff % maxW
-
-		var initWCount = Math.floor(diff / maxW)
-		const initWCoreExtra_flag = Math.ceil(remainDiff / coreMaxW)
-		const initWServerExtra_flag = Math.ceil(Math.max((remainDiff - coreMaxW), 0) / serverMaxW)
-
-		if (initWCount + initWCoreExtra_flag | initWServerExtra_flag) {
-			await ns.asleep(1000)
-			ns.tprint(`Reducing ${_target} SecLV, ${initWCount + initWCoreExtra_flag | initWServerExtra_flag} round needed`)
+		if (diff > 0) {
+			ns.tprint(`Reducing ${_target} SecLV`)
 		}
+		while (diff > 0) {
+			var sleepTime = ns.getHackTime(_target)
+			var homeWT = Math.min(Math.ceil(diff / perCoreW), getHomeT())
+			ns.exec('w.js', 'home', homeWT, _target, 'weak')
+			diff -= homeWT * perCoreW
 
-		while (initWCount--) {
-			ns.exec('w.js', 'home', getHomeT(), _target, 'weak')
+			var serverWT = Math.min(Math.ceil(diff / perServerW), getServerT())
 			for (const server of rooted) {
 				let s = ns.getServer(server)
-				let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
-				if (maxT) {
-					ns.exec('w.js', server, maxT, _target, 'weak')
+				let thisWT = Math.min(Math.floor((s.maxRam - s.ramUsed) / gwRam), serverWT)
+				if (thisWT) {
+					ns.exec('w.js', server, thisWT, _target, 'weak')
+					serverWT -= thisWT
+					diff -= thisWT * perServerW
 				}
 			}
-			if (diff > 2) {
-				await ns.asleep(ns.getWeakenTime(_target) + 1000)
-			} else(
+			if (pass_flag < 1.2 || diff === 0) {
 				await ns.asleep(1000)
-			)
-		}
-		if (initWCoreExtra_flag) {
-			let neededT = Math.ceil(remainDiff / perCoreW)
-			ns.exec('w.js', 'home', neededT, _target, 'weak')
-		}
-		if (initWServerExtra_flag) {
-			let neededT = Math.ceil((remainDiff - coreMaxW) / perCoreW)
-			for (const server of rooted) {
-				if (neededT > 0) {
-					let s = ns.getServer(server)
-					let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
-					if (maxT) {
-						ns.exec('w.js', server, Math.min(maxT, neededT), _target, 'weak')
-						neededT -= maxT
-					}
-				}
-			}
-		}
-		if (initWCoreExtra_flag || initWServerExtra_flag) {
-			if (s.hackDifficulty - s.minDifficulty > 2) {
-				await ns.asleep(ns.getWeakenTime(_target) + 1000)
+				break
 			} else {
-				await ns.asleep(1000)
+				await ns.asleep(sleepTime * 4 + 1000)
+				pass_flag = (diff + s.minDifficulty) / s.minDifficulty
 			}
 		}
+		return growServer(_target)
+	}
 
-		/*------------------------------------------------------------------------------------------------*/
+	async function growServer(_target) {
+		var moneyPert = ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1)
+		
 		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1), core))
 		var needCoreW = () => Math.ceil((needCoreG() * 0.004) / (ns.weakenAnalyze(1, core)))
 		var coreGWRatio = 1 + ns.weakenAnalyze(1, core) / 0.004
-		if (needCoreG() + needCoreW()) {
+		var serverGWRatio = 1 + ns.weakenAnalyze(1) / 0.004
+
+		if (moneyPert > 1) {
 			ns.tprint(`Growing money on ${_target}`)
-		} else {
-			return
 		}
-		while (needCoreG() + needCoreW() > getHomeT()) {
+		while (moneyPert < 1) {
 			var sleepTime = ns.getHackTime(_target)
-			var homeGT = Math.floor(Math.min(getHomeT(), needCoreG()) / coreGWRatio * (coreGWRatio - 1))
-			var homeWT = Math.max(Math.ceil(Math.min(getHomeT() / coreGWRatio, needCoreW())), Math.min(getHomeT() - homeGT, needCoreW()))
-			if (homeGT > 0) {
-				ns.exec('g.js', 'home', homeGT, _target, sleepTime * 0.79, 'grow')
+
+			var homeMaxGT = Math.floor(getHomeT() / coreGWRatio * (coreGWRatio - 1))
+			var homeMaxWT = Math.ceil(getHomeT() / coreGWRatio)
+			var homeGT = Math.min(homeMaxGT, needCoreG())
+			var homeWT = Math.min(homeMaxWT, needCoreW())
+			ns.exec('g.js', 'home', homeGT, _target, 'grow')
+			ns.exec('w.js', 'home', homeWT, _target, 'grow')
+			moneyPert *= growPercent(player, s, homeGT, core)
+			if (moneyPert >= 1) {
+				await ns.asleep(sleepTime * 4 + 1000)
+				return 0
 			}
-			if (homeWT > 0) {
-				ns.exec('w.js', 'home', homeWT, _target, 'grow')
-			}
-			var needServerG = Math.ceil(ns.growthAnalyze(_target, s.moneyMax / Math.max((s.moneyAvailable, 1) * growPercent(player, s, Math.min(homeGT, needCoreG()), core))) * 1.05)
-			var serverGT = needServerG > Math.floor(getServerT() / 27 * 25) ? Math.floor(getServerT() / 27 * 25) : needServerG
-			var serverWT = needServerG > Math.floor(getServerT() / 27 * 25) ? Math.ceil(getServerT() / 27 * 2) : needServerT
+
+			var serverMaxGT = Math.floor(getServerT() / serverGWRatio * (serverGWRatio - 1))
+			var serverMaxWT = Math.ceil(getServerT() / serverGWRatio)
+			var serverGT = serverMaxGT
+			var serverWT = serverMaxWT
+
+			var maxPert = moneyPert
+			//test max grow on server
 			for (const server of rooted) {
-				if ((serverGT + serverWT) > 0) {
-					let s = ns.getServer(server)
-					let maxT = Math.floor((s.maxRam - s.ramUsed) / gwRam)
-					if (serverGT && maxT) {
-						if (serverGT >= maxT) {
-							ns.exec('g.js', server, maxT, _target, sleepTime * 0.79, 'grow')
-							serverGT -= maxT
-							maxT = 0
-						} else {
-							ns.exec('g.js', server, serverGT, _target, sleepTime * 0.79, 'grow')
-							serverGT = 0
-							maxT -= serverGT
-						}
+				var thisServer = ns.getServer(server)
+				var thisMaxT = Math.floor((thisServer.maxRam - thisServer.ramUsed) / gwRam)
+				if (serverGT > 0) {
+					var thisGT = Math.min(thisMaxT, serverGT)
+					thisMaxT -= thisGT
+					serverGT -= thisGT
+					maxPert *= growPercent(player, ns.getServer(_target), thisGT)
+					if (maxPert >= 1) {
+						serverGT = serverMaxGT - serverGT
+						serverWT = Math.ceil(serverGT * 0.004 / (ns.weakenAnalyze(1)))
+						break
 					}
-					if (serverWT && maxT) {
-						if (serverWT >= maxT) {
-							ns.exec('w.js', server, maxT, _target, 'grow')
-							serverWT -= maxT
-							maxT = 0
-						} else {
-							ns.exec('w.js', server, serverWT, _target, 'grow')
-							serverWT = 0
-							maxT -= serverWT
-						}
-					}
+				}
+				if (serverWT > 0) {
+					var thisWT = Math.min(thisMaxT, serverWT)
+					serverWT -= thisWT
+				}
+			}
+			if (maxPert < 0) {
+				serverGT = serverMaxGT
+				serverWT = serverMaxWT
+			}
+			//run script here
+			for (const server of rooted) {
+				var thisServer = ns.getServer(server)
+				var thisMaxT = Math.floor((thisServer.maxRam - thisServer.ramUsed) / gwRam)
+				if (serverGT > 0) {
+					var thisGT = Math.min(thisMaxT, serverGT)
+					ns.exec('g.js', server, thisGT, _target, 'grow')
+					thisMaxT -= thisGT
+					serverGT -= thisGT
+					moneyPert *= growPercent(player, ns.getServer(_target), thisGT)
+				}
+				if (serverWT > 0) {
+					var thisWT = Math.min(thisMaxT, serverWT)
+					ns.exec('w.js', server, thisWT, _target, 'grow')
+					serverWT -= thisWT
 				}
 			}
 			await ns.asleep(sleepTime * 4 + 1000)
 		}
-		if (needCoreG() + needCoreW()) {
-			var sleepTime = ns.getHackTime(_target)
-			ns.exec('g.js', 'home', needCoreG(), _target, sleepTime * 0.79, 'grow')
-			ns.exec('w.js', 'home', needCoreW(), _target, 'grow')
-			await ns.asleep(sleepTime * 4 + 1000)
-		}
-
-		ns.tprint(`${_target} init complete`)
-		ns.run('getMax.js', 1, _target, ns.args[1] === 'reset' ? 'reset' : 'view')
 		return 0
 	}
 	/*------------------------------------------------------------------------------------------------*/
@@ -151,7 +142,7 @@ export async function main(ns) {
 		} catch (e) {
 			return ns.tprint('No such server')
 		}
-		await toMax(ns.args[0])
+		await weakServer(ns.args[0])
 		return
 	}
 
@@ -262,7 +253,8 @@ export async function main(ns) {
 	ns.tprint(target)
 	var jobs = []
 	for (const server of target) {
-		jobs.push(toMax(server))
+		jobs.push(weakServer(server))
+		await ns.asleep(100)
 	}
 	await Promise.all(jobs)
 	await ns.sleep(1000)

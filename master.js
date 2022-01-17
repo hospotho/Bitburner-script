@@ -22,7 +22,7 @@ export async function main(ns) {
             var totalNeededRam = neededHT * 1.7 + neededGT * 1.75 + neededWT * 1.75
             var availableRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home') - 10
             if (totalNeededRam > availableRam) {
-                var mult = availableRam / availableRam
+                var mult = availableRam / totalNeededRam
                 neededHT = Math.floor(neededHT * mult)
                 neededGT = Math.floor(neededGT * mult)
                 neededWT = Math.ceil(neededWT * mult)
@@ -196,7 +196,7 @@ export async function main(ns) {
         if (serversT - calcUsedServerT() > 0) {
             var coreIndex = coreTarget.indexOf(tempServerTarget[i])
             var serverIndex = serverTarget.indexOf(tempServerTarget[i])
-            var data = ns.read(coreTarget[coreIndex] + '.txt').slice(0, -1).split(',')
+            var data = ns.read(tempServerTarget[i] + '.txt').slice(0, -1).split(',')
             if (coreIndex == -1 && serverIndex == -1) {
                 serverTarget.push(tempServerTarget[i])
                 serverNeededHT.push(tempServerNeededHT[i])
