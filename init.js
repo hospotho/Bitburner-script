@@ -40,7 +40,7 @@ export async function main(ns) {
 			for (const server of rooted) {
 				let s = ns.getServer(server)
 				let thisWT = Math.min(Math.floor((s.maxRam - s.ramUsed) / gwRam), serverWT)
-				if (thisWT) {
+				if (thisWT > 0) {
 					ns.exec('w.js', server, thisWT, _target, 'weak')
 					serverWT -= thisWT
 					diff -= thisWT * perServerW
@@ -59,7 +59,7 @@ export async function main(ns) {
 
 	async function growServer(_target) {
 		var moneyPert = ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1)
-		
+
 		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1), core))
 		var needCoreW = () => Math.ceil((needCoreG() * 0.004) / (ns.weakenAnalyze(1, core)))
 		var coreGWRatio = 1 + ns.weakenAnalyze(1, core) / 0.004
