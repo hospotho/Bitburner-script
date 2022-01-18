@@ -57,7 +57,7 @@ export async function main(ns) {
 		return growServer(_target)
 	}
 
-	function growServer(_target) {
+	async function growServer(_target) {
 		var moneyPert = ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1)
 
 		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1), core))
