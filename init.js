@@ -54,10 +54,10 @@ export async function main(ns) {
 				pass_flag = (diff + s.minDifficulty) / s.minDifficulty
 			}
 		}
-		return await growServer(_target)
+		return growServer(_target)
 	}
 
-	async function growServer(_target) {
+	function growServer(_target) {
 		var moneyPert = ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1)
 
 		var needCoreG = () => Math.ceil(ns.growthAnalyze(_target, ns.getServer(_target).moneyMax / Math.max(ns.getServer(_target).moneyAvailable, 1), core))
