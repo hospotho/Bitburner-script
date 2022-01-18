@@ -54,7 +54,7 @@ export async function main(ns) {
 				pass_flag = (diff + s.minDifficulty) / s.minDifficulty
 			}
 		}
-		return growServer(_target)
+		return await growServer(_target)
 	}
 
 	async function growServer(_target) {

@@ -7,11 +7,11 @@ export async function main(ns) {
     while (ns.isRunning('reset.js', 'home')) {
         await ns.asleep(500)
     }
+    ns.tprint('buy BruteSSH.exe;buy FTPCrack.exe;buy relaySMTP.exe;buy HTTPWorm.exe;buy SQLInject.exe;buy DeepscanV1.exe;buy AutoLink.exe;')
     await ns.asleep(1000 * 60 * 10)
     ns.run('buyServer.js')
-    ns.tprint('buy BruteSSH.exe;buy FTPCrack.exe;buy relaySMTP.exe;buy HTTPWorm.exe;buy SQLInject.exe;buy DeepscanV1.exe;buy AutoLink.exe;')
     var hackLv = ns.getHackingLevel()
-    var resetTime = 1000 * 60 * 30
+    var resetTime = 0
     while (hackLv < 3000) {
         var cHackLv = ns.getHackingLevel()
         ns.clearLog()
