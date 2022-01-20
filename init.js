@@ -33,7 +33,8 @@ export async function main(ns) {
 		while (diff > 0) {
 			var sleepTime = ns.getHackTime(_target)
 			var homeWT = Math.min(Math.ceil(diff / perCoreW), getHomeT())
-			ns.exec('w.js', 'home', homeWT, _target, 'weak')
+			if (homeWT >= 1) {await ns.exec('w.js', 'home', homeWT, _target, 'weak') }
+			else {ns.asleep(1)}
 			diff -= homeWT * perCoreW
 
 			var serverWT = Math.min(Math.ceil(diff / perServerW), getServerT())
